@@ -56,8 +56,30 @@ def mostrar_ingresar():
         else:
             messagebox.showerror("Error", "Usuario o contraseña incorrectos.")
 
+    # Botón para enviar las credenciales
+    boton_ingresar = tk.Button(ventana, text="Iniciar Sesión", font=("Helvetica", 14), command=enviar_datos, width=15)
+    boton_ingresar.pack(padx=10, pady=10, anchor='center')
+
+
+def mostrar_registrar():
+    limpiar_ventana()
+
+    # Etiquetas y campos de entrada
+    etiqueta_usuario = tk.Label(ventana, text="Usuario:", font=("Helvetica", 14), width=15)
+    etiqueta_usuario.pack(padx=10, pady=5, anchor='center')
+
+    entrada_usuario = tk.Entry(ventana, font=("Helvetica", 14), width=20)
+    entrada_usuario.pack(padx=10, pady=5, anchor='center')
+
+    etiqueta_contraseña = tk.Label(ventana, text="Contraseña:", font=("Helvetica", 14), width=15)
+    etiqueta_contraseña.pack(padx=10, pady=5, anchor='center')
+
+    entrada_contraseña = tk.Entry(ventana, show="*", font=("Helvetica", 14), width=20)
+    entrada_contraseña.pack(padx=10, pady=5, anchor='center')
+
     # Función para registrar un nuevo usuario
     def registrar_usuario():
+        global usuario_actual
         usuario = entrada_usuario.get()
         contraseña = entrada_contraseña.get()
         jugadores = cargar_jugadores()
@@ -67,15 +89,15 @@ def mostrar_ingresar():
         else:
             jugadores[usuario] = contraseña
             guardar_jugadores(jugadores)
+            usuario_actual = entrada_usuario.get()
             messagebox.showinfo("Registro", f"Usuario {usuario} registrado con éxito.")
-
-    # Botón para enviar las credenciales
-    boton_ingresar = tk.Button(ventana, text="Ingresar", font=("Helvetica", 14), command=enviar_datos, width=15)
-    boton_ingresar.pack(padx=10, pady=10, anchor='center')
+            limpiar_ventana()
+            mostrar_menu_principal()
 
     # Botón para registrar nuevo usuario
     boton_registro = tk.Button(ventana, text="Registro", font=("Helvetica", 14), command=registrar_usuario, width=15)
     boton_registro.pack(padx=10, pady=10, anchor='center')
+    # enviar_datos()
 
 # Función para mostrar las opciones de dificultad del juego
 def mostrar_jugar():
@@ -115,13 +137,20 @@ def mostrar_menu_principal():
 
     # Botón para Ingresar (solo si no ha iniciado sesión)
     if not usuario_actual:
-        boton_ingresar = tk.Button(ventana, text="Ingresar", font=("Helvetica", 14), command=mostrar_ingresar, width=15)
+        boton_ingresar = tk.Button(ventana, text="Iniciar Sesión", font=("Helvetica", 14), command=mostrar_ingresar, width=15)
         boton_ingresar.pack(pady=10, anchor='center')  
+
+    # Botón para Registrar (solo si no ha iniciado sesión)
+    if not usuario_actual:
+        boton_registrar = tk.Button(ventana, text="Registrarse", font=("Helvetica", 14), command=mostrar_registrar, width=15)
+        boton_registrar.pack(pady=10, anchor='center')  
+
 
     # Botón para Jugar (solo visible si ha iniciado sesión)
     if usuario_actual:
-        boton_jugar = tk.Button(ventana, text="Seleccionar Dificultad", font=("Helvetica", 14), command=mostrar_jugar, width=15)
-        boton_jugar.pack(pady=10, anchor='center')
+        mostrar_jugar()
+        # boton_jugar = tk.Button(ventana, text="Seleccionar Dificultad", font=("Helvetica", 14), command=mostrar_jugar, width=15)
+        # boton_jugar.pack(pady=10, anchor='center')
 
     # Botón para Cerrar sesión (solo visible si ha iniciado sesión)
     if usuario_actual:
